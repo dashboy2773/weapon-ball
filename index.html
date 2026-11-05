@@ -1165,7 +1165,7 @@ function ccTick(p,q){const D=BD,C=D.C;D.t++;if(D.t==1){p.bf=0;p.vh=0}
    fly(C,p.x+C.sd*140,p.y,3,.05);C.ct++;
    if(C.ct%85==30){for(let i=0;i<4;i++)fire('hb',C.x,C.y,f+(i-1.5)*.12,2.5);}
    if(C.ct>CCK.level){C.st='a';C.ct=0}}
-  move(C);C.rot+=(Math.max(-.4,Math.min(.4,C.vx*.09))-C.rot)*.12;
+  move(C);C.ra+=adf(f,C.ra)*.12;C.rot=C.ra-Math.PI/2;
   if(D.bh<=0&&Math.hypot(p.x-C.x,p.y-C.y)<p.r+CCK.hitC-2)strike(p,{it:'g',ic:40},CCK.d*70*vh(),C,4.5)}
  // ---- the Constructs: they circle the player, always turn their face to it, and spin up before each dash (like the Twins) ----
  for(const b of D.br){if(b.dead)continue;b.ct++;const dx=p.x-b.x,dy=p.y-b.y,f=Math.atan2(dy,dx),X=b.id=='X',sf=1+(1-b.hp/b.max)*.4;let ta=f;if(!b.go&&b.ct>=120){b.go=1;b.ct=0}
@@ -1186,13 +1186,13 @@ function ccTick(p,q){const D=BD,C=D.C;D.t++;if(D.t==1){p.bf=0;p.vh=0}
   if(s.cd<=0&&!C.dead){s.cd=170+Math.random()*130|0;fire('dt',s.x,s.y,Math.atan2(p.y-s.y,p.x-s.x),3.8)}
   if(s.lc<=0){s.lc=400+Math.random()*200|0;if(D.lk.filter(l=>!l.dead).length<3){const l=ccE('L',s.x,s.y,CCK.hpL,1,7);l.cd=0;D.lk.push(l)}}}
  for(const l of D.lk){if(l.dead)continue;const dx=p.x-l.x,dy=p.y-l.y,d=Math.hypot(dx,dy)||1;l.cd--;l.vx+=(dx/d*2.3-l.vx)*.04;l.vy+=(dy/d*2.3-l.vy)*.04;move(l);
-  if(l.cd<=0&&d<p.r+l.r+2){strike(p,{it:'g',ic:40},CCK.d*CCK.dLS*vh(),l,3);l.cd=40;l.vx=-dx/d*3;l.vy=-dy/d*3}}
+  if(l.cd<=0&&d<p.r+l.r+2){strike(p,{it:'g',ic:40},CCK.d*30*vh(),l,3);l.cd=40;l.vx=-dx/d*3;l.vy=-dy/d*3}}
  // ---- projectiles ----
  for(const l of D.pj){l.px=l.x;l.py=l.y;l.l--;l.f++;let hit=0,boom=0;
   if(l.k=='fb'){const a=Math.atan2(p.y-l.y,p.x-l.x),ca=Math.atan2(l.vy,l.vx),na=ca+Math.max(-.05,Math.min(.05,adf(a,ca)));l.vx=Math.cos(na)*3.3;l.vy=Math.sin(na)*3.3;l.x+=l.vx;l.y+=l.vy;
    if(Math.hypot(p.x-l.x,p.y-l.y)<p.r+l.r){hit=1;boom=1}else if(l.l<=0||Math.hypot(p.x-l.x,p.y-l.y)<34)boom=1;
    if(boom){ring(l.x,l.y,10,2.8);flash(l.x,l.y,['#ff3b3b','#ffb347','#fff'],14);l.dead=1}}
-  else if(l.k=='hf'||l.k=='hb'){const sp=Math.hypot(l.vx,l.vy),mx=l.k=='hf'?7.4:6.2,ns=Math.min(mx,sp*(l.k=='hf'?1.012:1.013));l.vx*=ns/sp;l.vy*=ns/sp;l.x+=l.vx;l.y+=l.vy;
+  else if(l.k=='hf'||l.k=='hb'){const sp=Math.hypot(l.vx,l.vy)||.001,mx=l.k=='hf'?7.4:6.2,ns=Math.min(mx,sp*(l.k=='hf'?1.012:1.013));l.vx*=ns/sp;l.vy*=ns/sp;l.x+=l.vx;l.y+=l.vy;
    if(Math.hypot(p.x-l.x,p.y-l.y)<p.r+l.r)hit=1;
    if(l.k=='hf'&&(l.x<X0||l.x>X1||l.y<Y0||l.y>Y1||l.l<=0)){boom=1;if(!hit&&Math.hypot(p.x-l.x,p.y-l.y)<p.r+32)hit=1}
    if(boom||hit){if(l.k=='hf')flash(l.x,l.y,['#ff3b3b','#ffb347','#fff3b0'],14);if(boom)l.dead=1}}
